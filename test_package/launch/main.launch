@@ -1,0 +1,14 @@
+<launch>
+    <!-- Launch the sound_play_tts node -->
+    <node name="sound_play_tts" pkg="test_package" type="sound_play_tts" />
+
+    <!-- Launch the soundplay_node from sound_play package -->
+    <node name="soundplay_node" pkg="sound_play" type="soundplay_node.py" />
+
+    <arg name="world" default="libraryworld" />
+
+    <!-- Include the tiago_navigation.launch and pass the world argument -->
+    <include file="$(find test_package)/launch/tiago_navigation.launch">
+        <arg name="world" value="$(arg world)" />
+    </include>
+</launch>

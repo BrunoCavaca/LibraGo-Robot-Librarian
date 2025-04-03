@@ -1,0 +1,11 @@
+cv_bridge
+easyocr
+fuzzywuzzy
+numpy
+openai
+opencv_python
+pydub
+rosnumpy
+scipy
+SpeechRecognition
+ultralytics
