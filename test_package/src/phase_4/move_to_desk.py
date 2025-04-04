@@ -21,25 +21,27 @@ class ReturnToDesk(smach.State):
         self.moveRobot = MoveTIAGo()
         self.mediator = mediator
         self.gripperSub = rospy.Subscriber('/gripper_controller/state',JointTrajectoryControllerState,self.gripper_cb)
+        self.reachedDestination = False
         self.gripperEmpty = False
         self.playMotion = PlayMotion()
 
     def execute(self,userdata):
-        if self.gripperEmpty:
-            self.set_gripper_state()
-            self.playMotion.playMotion("home")
+
 
         executed = self.moveRobot.execute_movement(DESK_COORDS,goingRightToLeft= False,facingNorth=False)
-
+        
         if executed:
+            self.reachedDestination = True
+            if self.gripperEmpty:
+                self.set_gripper_state()
             self.mediator.setNavigationStatus() 
             return 'moveSuccess' 
         return 'moveFailure'
 
     def set_gripper_state(self):
-        if self.gripperEmpty:
-            self.mediator.setGripperStatus()
+        self.mediator.setGripperStatus()
 
     def gripper_cb(self,msg):
-        if round(msg.actual.positions[0],2) not in MIN_MAX_GRIP:
-            self.gripperEmpty = True
+        if self.reachedDestination:
+            if round(msg.actual.positions[0],2)  == 0.00 or round(msg.actual.positions[0],2)  == 0.70:
+                self.gripperEmpty = True
