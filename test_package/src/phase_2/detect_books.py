@@ -80,13 +80,13 @@ class DetectBooks(smach.State):
                         
                         img = cv2.cvtColor(obj_rgb, cv2.COLOR_BGR2GRAY)
                         similarityScore = self.runSimilarityChecker(img,bookName)
-                        # if similarityScore >= 45:
-                        self.mediator.setRobotPose([self.robot_pose.position.x,self.robot_pose.position.y,self.robot_pose.position.z])
-                        self.mediator.setDetectionStatus()
-                        self.isRunning = False
-                        print("Valid Detection ocurred at:")
-                        print(self.robot_pose)
-                        return 'detectSuccess'
+                        if similarityScore >= 45:
+                            self.mediator.setRobotPose([self.robot_pose.position.x,self.robot_pose.position.y,self.robot_pose.position.z])
+                            self.mediator.setDetectionStatus()
+                            self.isRunning = False
+                            print("Valid Detection ocurred at:")
+                            print(self.robot_pose)
+                            return 'detectSuccess'
                     self.isRunning = False
                 self.isRunning = False
                 # Sleep to give the loop a pause before processing the next frame
